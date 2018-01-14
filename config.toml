@@ -5,7 +5,7 @@ theme = "minimo"
 enableEmoji = true
 
 disqusShortname = "jegnux-github-io"
-googleAnalytics = ""
+googleAnalytics = "UA-112418417-1"
 
 Paginate = 5
 preserveTaxonomyNames = true
