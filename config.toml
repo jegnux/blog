@@ -1,0 +1,94 @@
+baseURL = "https://jegnux.github.io/"
+languageCode = "en-us"
+title = "✨ Elegant Programming in Swift"
+theme = "minimo"
+enableEmoji = true
+
+disqusShortname = ""
+googleAnalytics = ""
+
+Paginate = 5
+preserveTaxonomyNames = true
+
+enableRobotsTXT = true # generate robots.txt
+
+# Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
+pygmentsCodefences = true
+
+# Missing translations will default to this content language
+defaultContentLanguage = "en"
+
+[params.info]
+description = ""
+title404 = "Nothing's here!"
+
+[params.assets]
+favicon = "favicon.ico"
+customCSS = ["css/custom.css"]
+customJS = ["js/custom.js"]
+gopher = "" # used in 404 template ( Generator: https://gopherize.me )
+
+[params.copyright]
+prefix = ""
+holder = "Jérôme Alves"
+startYear = "2018"
+suffix = ""
+
+[params.settings]
+# date & time format: https://golang.org/pkg/time/
+dateFormat = "2006, Jan 02"
+listDateFormat = "2006, Jan 02"
+hideEntryNavigation = ["page"] # boolean / array of sections
+recentPostsLength = 4
+hideSocialMenu = false
+showReadingTime = true
+noTermCloudShuffle = false
+homepageSections = ["recent_posts"]
+
+[params.opengraph.facebook]
+admins = [] # array of Facebook IDs
+appID = ""
+pageID = ""
+
+[params.opengraph.twitter]
+page = "jegnux" # Twitter page username
+
+[params.seo]
+# Title Separator: - – — · • * ⋆ | ~ « » < >
+titleSeparator = "•"
+
+[params.social]
+codepen = ""
+email = "j.alves@me.com"
+facebook = ""
+github = "jegnux"
+instagram = ""
+linkedin = "jeromealves"
+twitter = "jegnux"
+telegram = ""
+
+[blackfriday]
+
+[[menu.main]]
+name = "Home"
+weight = -110
+identifier = "blog"
+url = "/"
+
+[params.social.config]
+platforms = ["github","facebook","twitter","instagram","email","codepen","linkedin","telegram"]
+
+[taxonomies]
+author = "authors"
+category = "categories"
+tag = "tags"
+
+[permalinks]
+page = "/:slug/"
+
+[languages]
+# edit this block for your own language
+[languages.en]
+lang = "en"
+languageName = "English"
+weight = 1
