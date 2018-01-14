@@ -1,7 +1,7 @@
 <section class="post-comments">
   <h3>Comments</h3>
 
-  {{ $comments := readDir "data/comments" }}
+  {{ $comments := readDir "comments" }}
   {{ $.Scratch.Add "hasComments" 0 }}
   {{ $entryId := .UniqueID }}
 
@@ -26,7 +26,7 @@
 
   <h3>Say something</h3>
 
-  <form class="post-new-comment" method="POST" action="https://dev.staticman.net/v2/entry/jegnux/jegnux.github.io/master/comments">
+  <form class="post-new-comment" method="POST" action="https://dev.staticman.net/v2/entry/jegnux/blog/master/comments">
     <input type="hidden" name="options[redirect]" value="{{ .Permalink }}#comment-submitted">
     <input type="hidden" name="options[entryId]" value="{{ .UniqueID }}">
     <input name="fields[name]" type="text" class="post-comment-field" placeholder="Your name">
