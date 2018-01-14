@@ -146,7 +146,7 @@ if let n = numbers.safe[2...8] {
 }
 ```
 
-Semantically, it's way better. `numbers.safe` is a _safe version of `numbers`_. We can use its subscripts without worrying about being out of bounds.
+Semantically, it's way better: `numbers.safe` is a _safe version of `numbers`_. We can use its subscripts without worrying about being out of bounds.
 
 
 _This post was initially [posted on medium](https://medium.com/@jegnux/safe-collection-subsripting-in-swift-3771f16f883)_

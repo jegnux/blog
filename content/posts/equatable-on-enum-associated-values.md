@@ -207,3 +207,5 @@ QueryFilter.afterID(42).value == QueryFilter.afterID(42).value
 QueryFilter.afterID(42).value == QueryFilter.beforeID(42).value
 // true
 ```
+
+_This post was initially [posted on medium](https://medium.com/@jegnux/on-swift-enums-with-associated-value-equality-e815a768d9b0)_
