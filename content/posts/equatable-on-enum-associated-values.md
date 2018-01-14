@@ -10,11 +10,10 @@ tags: ["swift-lang"]
 While I was reading Twitter, I came across this good question from [@Cocoanetics](https://twitter.com/Cocoanetics):
 
 {{% tweet 800653458365939713 %}}
-<img alt="Cocoanetics' Screenshot" src="https://pbs.twimg.com/media/Cxx-EWcXUAEQiBg.jpg" style="height:450px;"/>
 
 ---
 
-Most of responses were pure technical (but still valid) answers. In short: 
+Most of responses were pure technical (but still valid) answers. In short:
 
 > you should use a switch instead, but still need to compare all cases.
 
@@ -25,7 +24,7 @@ Maybe. But the code above still feels wrong to me because it tries to make two d
 
 No difficulty here to understand that this can become a source of bugs. Especially with indirect uses of Equatable, like a Collection's `contains()` func for example.
 
-How could we make a more elegant implementation of Equatable with this two requirements: 
+How could we make a more elegant implementation of Equatable with this two requirements:
 - 2 different cases can’t be equal
 - `.afterID` and `.beforeID` associated identifiers equality must be easy and straightforward to check.
 
@@ -58,16 +57,16 @@ extension QueryFilter: Equatable {
     switch (lhs, rhs) {
     case (.noFilter, .noFilter):
       return true
-      
+
     case let (.afterID(_id), .afterID(id)):
       return _id == id
-      
+
     case let (.beforeID(_id), .beforeID(id)):
       return _id == id
-      
+
     case let (.offset(_offset), .offset(offset)):
       return _offset == offset
-      
+
     default:
       return false
     }
@@ -86,7 +85,7 @@ QueryFilter.afterID(42) == QueryFilter.afterID(1337)
 QueryFilter.afterID(42) == QueryFilter.beforeID(42)
 // false, cases are different
 
-QueryFilter.afterID(42).identifier == QueryFilter.beforeID(42).identifier 
+QueryFilter.afterID(42).identifier == QueryFilter.beforeID(42).identifier
 // true, we don't care about the case, we just compare identifiers
 ```
 
@@ -117,12 +116,12 @@ enum QueryFilter {
   case offset(Int)
 
   // This will shadow one of above cases
-  indirect case value(QueryFilter) 
+  indirect case value(QueryFilter)
 
   var value: QueryFilter {
      // Avoid `.value(_)` shadowing
     if case .value(_) = self { return self }
-    
+
     // Shadow original case (self) in an `value(_)` case
     return .value(self)
   }
@@ -133,36 +132,36 @@ enum QueryFilter {
 extension QueryFilter: Equatable {
   static func == (lhs: QueryFilter, rhs: QueryFilter) -> Bool {
     switch (lhs, rhs) {
-     
+
     // Nothing change for basic cases. We make a strict equality check
     case (.noFilter, .noFilter):
       return true
-      
+
     case let (.afterID(_id), .afterID(id)):
       return _id == id
-      
+
     case let (.beforeID(_id), .beforeID(id)):
       return _id == id
-      
+
     case let (.offset(_offset), .offset(offset)):
       return _offset == offset
 
-    // But we allow comparison between .beforeID(_) and .afterID(_) values 
+    // But we allow comparison between .beforeID(_) and .afterID(_) values
     // if they shadowed by a .value(_) case
- 
+
     case let (.value(lhs), .value(rhs)):
-    
+
       switch (lhs.original, rhs.original) {
-      
+
       case let (.beforeID(_id), .afterID(id)):
         return _id == id
-        
+
       case let (.afterID(_id), .beforeID(id)):
         return _id == id
-      
+
       // If it's not a comparison between .beforeID(_) and .afterID(_)
       // we fallback on the classic equality check.
-      
+
       default:
         return lhs == rhs
       }
