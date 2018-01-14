@@ -18,7 +18,13 @@ pygmentsCodefences = true
 # Missing translations will default to this content language
 defaultContentLanguage = "en"
 
+[params]
+staticman_api = "https://api.staticman.net/v2/entry/jegnux/blog/master/comments" #Add staticman API URL to enable staticman comments
+comments = true
+
 [params.info]
+author = "Jérôme Alves"
+gravatar = "j.alves@me.com"
 description = ""
 title404 = "Nothing's here!"
 
@@ -58,6 +64,7 @@ page = "jegnux" # Twitter page username
 titleSeparator = "•"
 
 [params.social]
+rss = true
 codepen = ""
 email = "j.alves@me.com"
 facebook = ""
