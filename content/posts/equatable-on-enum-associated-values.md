@@ -15,9 +15,9 @@ While I was reading Twitter, I came across this good question from [@Cocoanetics
 
 Most of responses were pure technical (but still valid) answers. In short:
 
-> you should use a switch instead, but still need to compare all cases.
+> you can use a switch to have clearer code, but you still need the same logic
 
-Maybe. But the code above still feels wrong to me because it tries to make two different cases equatable just because they have the same associated value. That's semantically incorrect. With a such implementation the following code would return `true`
+Maybe. But the logic above feels wrong to me because it tries to make two different cases equatable just because they have the same associated value. That's semantically incorrect. With a such implementation the following code would return `true`
 ```swift
 .afterID(42) == .beforeID(42)
 ```
