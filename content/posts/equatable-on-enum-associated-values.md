@@ -25,12 +25,13 @@ Maybe. But the logic above feels wrong to me because it tries to make two differ
 No difficulty here to understand that this can become a source of bugs. Especially with indirect uses of Equatable, like a Collection's `contains()` func for example.
 
 How could we make a more elegant implementation of Equatable with this two requirements:
-- 2 different cases can’t be equal
-- `.afterID` and `.beforeID` associated identifiers equality must be easy and straightforward to check.
+
+- 2 different `cases` **can’t** be equal
+- `.afterID` and `.beforeID` associated identifiers equality **must** be easy and straightforward to check.
 
 ---
 
-# A solution
+# A simple solution
 
 An easy first attempt could be to perform a strict equality check on cases, and use an `identifier` property to check identifiers equality:
 
