@@ -2,3 +2,6 @@
 	path = public
 	url = https://github.com/jegnux/jegnux.github.io
 	branch = master
+[submodule "themes/minimo"]
+	path = themes/minimo
+	url = https://github.com/jegnux/minimo
