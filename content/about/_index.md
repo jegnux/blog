@@ -1,7 +1,7 @@
 ---
 title: "About Me"
 date: 2018-01-14T01:04:19+01:00
-draft: true
+draft: false
 menu: ["main"]
 ---
 
