@@ -1,0 +1,18 @@
+code:not(pre code) {
+  color: #555;
+  font-size: 80%;
+  font-weight: 100;
+  background-color: #eee;
+  padding: 2px 4px;
+  border-radius: 3px;
+}
+
+span.red {
+  font-weight: bold;
+  color:#FF2600;
+}
+
+span.green {
+  font-weight: bold;
+  color:#008F00;
+}
