@@ -1,24 +1,27 @@
 ---
-title: "Scroll to Top Feature in RxSwift"
+title: "Scroll to Top with Undo in RxSwift"
 date: 2018-01-28T09:23:08+01:00
 draft: false
+tags: ["rxswift"]
 ---
 
-In this post I'll write about how to implement a custom **scroll to top** feature with the ability to restore the old `contentOffset`. The first app I saw implementing this feature is [TweetBot](https://tapbots.com/tweetbot/) in its [4.8 update](https://itunes.apple.com/fr/app/tweetbot-4-for-twitter/id1018355599?mt=8) and it became instantly a must have for me.
+In this post I'll write about how to implement a custom **scroll to top** feature with the ability to restore the old `contentOffset`. The first app I saw implementing this feature was [TweetBot](https://tapbots.com/tweetbot/) in its [4.8 update](https://itunes.apple.com/fr/app/tweetbot-4-for-twitter/id1018355599?mt=8) and it became instantly a must have for me.
 
 While working on side-project application (stay tuned 😉), I implemented this feature as well. Let's see how I did it entirely using **RxSwift**.
 
 ## :sparkles: RxSwift
 
-My *love* for RxSwift began mid 2016 when I joined [Heetch](https://jobs.lever.co/heetch/03875a59-c16f-4425-8161-288499837167). Since then, it allows me to write complex features in such a simple, expressive, and readable way. I think I will speak about **RxSwift** often on this blog, because it definitely helps to write elegant code IMHO.
+My *love* for **RxSwift** began mid 2016 when I joined <span style="color: #f80059; font-weight:bold;">Heetch</span>. Since then, it helps me to write complex features in such a simple, expressive, and readable way. I think I will speak about **RxSwift** often on this blog, because IMHO <span class="green">it definitely helps to write elegant code</span>.
 
-The **scroll to top** is usually triggered by a tap on the status bar, but as it will be implemented here it will also be possible to add new sources to trigger. For instance a tap on tab bar item, on `viewWillAppear`, or on everything else as soon as it's an `Observable`. The beauty of **RxSwift** is to offer a uniform interface for many design pattern of Cocoa (delegate, target/action, notifications, callback closures, etc.).
+The **scroll to top** is usually triggered by a tap on the status bar, but as it will be implemented here it will also be possible to add new sources to trigger. For instance a tap on tab bar item, or on `viewWillAppear()`, or on everything else as soon as it's an `Observable`.
+
+<div style="background-color:#eeeeee; text-align: center; padding: 20px;">The beauty of <b>RxSwift</b> is to offer <span class="green">a uniform interface for many Cocoa's design patterns</span> (delegate, target/action, notifications, callback closures, etc.).</div>
 
 ## Implementation
 
 ### The recipe
 
-1. Implement an `Observable<Void>` that emits whenever the user tap on the `UIApplication.shared.keyWindow` in status bar's frame
+1. Implement an `Observable<Void>` that emits whenever the user taps on the `UIApplication.shared.keyWindow` in status bar's frame
 2. Associate 1. to a `UIViewController` and filter its events to emit them if and only if the `UIViewController` instance is visible (ie. between `viewDidAppear` and `viewWillDisappear` lifecycle events)
 3. Implement a `ScrollTarget` enum to let switch over different target (either `.top` or `.offset(CGFloat)`
 4. Implement an `Observable` that emits whenever the user has finished to scroll an `UIScrollView` in order to save the current `contentOffset` into `ScrollTarget.offset(contentOffset.y)`
@@ -26,8 +29,8 @@ The **scroll to top** is usually triggered by a tap on the status bar, but as it
 
 ### Prerequisites
 
-For the implementation I used `RxSwift`, `RxCocoa` and `RxSwiftExt`.
-There's also two little Rx extension I use.
+For the implementation I used **RxSwift**, **RxCocoa** and **RxSwiftExt**.
+There are also two little Rx extensions I use.
 
 The first one transforms any `Observable<E>` into `Observable<Void>`. It's quite convenient when we don't need the value. Typically when you use the `Observable` as a sampler.
 
@@ -54,7 +57,7 @@ extension ObservableType {
 
 ### 1. Detect tap on status bar
 
-To do this without any subclassing, `RxCocoa` will be a precious help.
+To do this without any subclassing, **RxCocoa** will be a precious help.
 
 First let's make an `Observable<UIWindow?>` that emits the `keyWindow` of `UIApplication.shared`.
 
@@ -76,15 +79,15 @@ extension Reactive where Base: UIApplication {
 - On **lines 3 to 6** we listen for `UIWindowDidBecomeKey` notification and get the associated object (the window) once a notification is posted
 - On **lines 8 to 11** we use the current `base.keyWindow` as a start value
 
-Now we always have the latest `keyWindow` we can flatMap over it to detect when user tap in it. The best way to do this is to attach an `UITapGestureRecognizer` to the window. It would be really easy to do with `RxGesture` for example.
+Now that we always have the latest `keyWindow` we can `flatMap` over it to detect when user taps in it. The best way to do this is to attach an `UITapGestureRecognizer` to the window. It would be really easy to do with [**RxGesture**](https://github.com/RxSwiftCommunity/RxGesture) for example.
 
-Unfortunately, the view system on iOS won't deliver the touch event to any gesture recognizer if touch location is in status bar's frame.
+Unfortunately, on iOS <span class="red">the view system won't deliver the touch event</span> to any gesture recognizer if the touch location is in status bar's frame.
 The only way I found to bypass this limitation is to intercept the invocation of:
 ```swift
 func point(inside: CGPoint, with: UIEvent?)
 ```
 
-And `RxCocoa` have a powerful built-in `.methodInvoked()` operator to do this.
+And **RxCocoa** has a powerful built-in `.methodInvoked()` operator to do this.
 
 ```swift
 extension ObservableType {
@@ -108,17 +111,17 @@ extension ObservableType {
 }
 ```
 - On **line 3** we use the `keyWindow: Observable<UIWindow?>` defined earlier.
-- On **lines 6 to 10** we use the `.methodInvoked()` operator to intercept the invocation and `map` over it to get the point location of the touch event. Absolutely, it would be safe to force unwrap with `return arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep the optional and unwrap it with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of `RxSwiftExt`.
+- On **lines 6 to 10** we use the `.methodInvoked()` operator to intercept the invocation and `map` over it to get the point location of the touch event. In practice, it would be safe to force unwrap with `return arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep the optional and unwrap it with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of **RxSwiftExt**.
 - On **line 14** you can notice that I add an extra `20pt` to the `statusBarFrame`. It makes the tappable target a little bit higher. [M. Fitts](https://lawsofux.com/fittss-law.html) approves it :+1:.
 - On **line 17**, we use the `.debounce()` operator with a delay of `0` and an async instance of the `MainScheduler`. It's important because `UIView.point(inside:with:)` will be called many times during the same run loop, so we need to filter repetitive events. You can see this as similar to an other UIKit pattern like `setNeedsDisplay()` / `displayIfNeeded()`
 
-Congratulations, you're done with the first step :relieved:
+:muscle: Congratulations, you're done with the first step
 
 ### 2. Detect status bar tap on a visible ViewController
 
-As you will likely use this feature on a `UIScrollView` included in a specific `UIViewController`, you better make sure that this `UIViewController` is actually visible before reacting to this event.
+As you will likely use this feature on a `UIScrollView` included in a specific `UIViewController`, you better make sure that this `UIViewController` is actually **visible** before reacting to this event.
 
-Otherwise, imagine you have several `UIViewController` in a `UITabBarController` implementing this gesture. If you don't bound the event to each `UIViewController`'s visibility, a tap on the status bar will scroll to top all `UIScollView` of each view controllers. We obviously don't want this.
+Otherwise, imagine you have several `UIViewController` implementing this gesture in a `UITabBarController`. If you don't emit the event only for the visible `UIViewController`, a tap on the status bar will scroll to top all `UIScrollView` of all view controllers. We obviously don't want this.
 
 ```swift
 extension Reactive where Base: UIViewController {
@@ -149,9 +152,9 @@ extension Reactive where Base: UIViewController {
 
 ```
 
-Once again, `RxCocoa`'s `.methodInvoked()` operator is a great help as it allows us to intercept appearance lifecycle methods and map them to a boolean indicating if the view controller is visible or not. Here, `viewDidAppear` is mapped to `true` (line 11) and other methods are mapped to `false`.
+Once again, **RxCocoa**'s `.methodInvoked()` operator is a great help as it allows us to intercept appearance lifecycle methods and map them to a boolean indicating if the view controller is visible or not. Here, `viewDidAppear` is mapped to `true` (line 11) and other methods are mapped to `false`.
 
-To finish, we reuse `UIApplication.shared.rx.statusBarTap` we created earlier and use the [`.pausable()`](https://github.com/RxSwiftCommunity/RxSwiftExt#pausable) operator of `RxSwiftExt` in order to emit values only if latest value from `isVisible` is `true`.
+To finish, we reuse `UIApplication.shared.rx.statusBarTap` we created earlier and use the [`.pausable()`](https://github.com/RxSwiftCommunity/RxSwiftExt#pausable) operator of **RxSwiftExt** in order to emit values only if latest value from `isVisible` is `true`.
 
 
 ### 3. ScrollTarget
@@ -163,11 +166,11 @@ enum ScrollTarget {
 }
 ```
 
-Done :boom:
+:boom: Done
 
 ### 4. Save contentOffset after scroll
 
-> Starting from here, I will simplify and write all the code we need in our `UIViewController`'s `viewDidLoad()`. I will also assume there are a `scrollView` and a `disposeBag` around there.
+Starting from here, I will simplify and write all the code we need in our `UIViewController`'s `viewDidLoad()`. I will also assume there are a `scrollView` and a `disposeBag` around there.
 
 Let's start with the code.
 
@@ -251,9 +254,9 @@ No big deal here, we just get the good offset for each `ScrollTarget` cases and 
 
 To conclude, we've seen some interesting techniques offered by **RxSwift** and **RxCocoa** that allowed us to <span class="green">compose</span> an interesting feature without <span class="red">subclassing</span>, or using a <span class="red">mutable shared state</span>.
 
-Starting from here, you could wrap everything somewhere to make it easily reusable on any `UIViewController` / `UIScrollView`.
+As an exercise, you can factorize the code we added in the `viewDidLoad()` in order to make it easily reusable on any `UIViewController` / `UIScrollView`.
 
 
-Though, there are some trade-offs because we use some `RxCocoa` features that depends on Objective-C runtime and despite we don't use any private methods, you still should be careful when you use such techniques.
+:warning: Despite how elegant and clean the final code looks like, there are still some trade-offs because we use some **RxCocoa** features that depends on **Objective-C runtime** and, event if we don't use any private methods, you still should be careful when you use such techniques.
 
-I hope you enjoyed reading this blog post / tutorial. Please do not hesitate to add a comment to tell me what you thought about it, to ask me some questions, or even to suggest me an idea for a future post where I could try to make an obscure solution more elegant :wink:
+<div style="background-color:#eeeeee; padding: 20px;">I hope you enjoyed reading this blog post / tutorial. Please do not hesitate to add a comment to tell me what you thought about it, to ask me some questions, or even to suggest me an idea for a future post where I could try to make an obscure solution more elegant :wink:</div>
