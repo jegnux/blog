@@ -1,6 +1,6 @@
-baseURL = "https://jegnux.github.io/"
+baseURL = "http://www.elegantswift.com/"
 languageCode = "en-us"
-title = "✨ Elegant Programming in Swift"
+title = "✨ Elegant Swift"
 theme = "minimo"
 enableEmoji = true
 
