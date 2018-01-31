@@ -7,7 +7,7 @@ tags: ["rxswift"]
 
 In this post I'll write about how to implement a custom **scroll to top** feature with the ability to restore the old `contentOffset`. The first app I saw implementing this feature was [TweetBot](https://tapbots.com/tweetbot/) in its [4.8 update](https://itunes.apple.com/fr/app/tweetbot-4-for-twitter/id1018355599?mt=8) and it became instantly a must have for me.
 
-While working on side-project application (stay tuned 😉), I implemented this feature as well. Let's see how I did it entirely using **RxSwift**.
+While working on side-project application (stay tuned 😉), I implemented this feature as well. Let's see how it can be done entirely using **RxSwift** :metal:
 
 ## :sparkles: RxSwift
 
