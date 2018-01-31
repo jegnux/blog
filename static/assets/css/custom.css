@@ -16,3 +16,9 @@ span.green {
   font-weight: bold;
   color:#008F00;
 }
+
+#recent-posts .meta time {
+  color: #888888;
+  font-size: 100%;
+  font-weight: lighter;
+}
