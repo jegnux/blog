@@ -84,7 +84,7 @@ Now that we always have the latest `keyWindow` we can `flatMap` over it to detec
 Unfortunately, on iOS <span class="red">the view system won't deliver the touch event</span> to any gesture recognizer if the touch location is in status bar's frame.
 The only way I found to bypass this limitation is to intercept the invocation of:
 ```swift
-func point(inside: CGPoint, with: UIEvent?)
+func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?
 ```
 
 And **RxCocoa** has a powerful built-in `.methodInvoked()` operator to do this.
