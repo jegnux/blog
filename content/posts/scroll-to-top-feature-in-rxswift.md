@@ -95,9 +95,14 @@ extension ObservableType {
     return keyWindow
       .flatMapLatest { window -> Observable<CGPoint> in
         guard let window = window else { return .empty() }
-        return window.rx.methodInvoked(#selector(UIView.point(inside:with:)))
-          .map { arg -> CGPoint? in
-            return arg.first as? CGPoint
+        return window.rx
+          .methodInvoked(#selector(UIView.hitTest(_:with:)))
+          .map { args -> CGPoint? in
+            guard args.count == 2,
+              let point = args[0] as? CGPoint,
+              let _ = args[1] as? UIEvent
+              else { return nil}
+            return point
           }
           .unwrap()
       }
@@ -111,11 +116,11 @@ extension ObservableType {
 }
 ```
 - On **line 3** we use the `keyWindow: Observable<UIWindow?>` defined earlier.
-- On **lines 6 to 10** we use the `.methodInvoked()` operator to intercept the invocation and `map` over it to get the point location of the touch event. In practice, it would be safe to force unwrap with `return arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep the optional and unwrap it with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of **RxSwiftExt**.
-- On **line 14** you can notice that I add an extra `20pt` to the `statusBarFrame`. It makes the tappable target a little bit higher. [M. Fitts](https://lawsofux.com/fittss-law.html) approves it :+1:.
-- On **line 17**, we use the `.debounce()` operator with a delay of `0` and an async instance of the `MainScheduler`. It's important because `UIView.point(inside:with:)` will be called many times during the same run loop, so we need to filter repetitive events. You can see this as similar to an other UIKit pattern like `setNeedsDisplay()` / `displayIfNeeded()`
+- On **lines 6 to 15** we use the `.methodInvoked()` operator to intercept the invocation and `map` over it to get the point location of the touch event. In practice, it would be safe to returned directly a forced unwrapped `arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep the optional and unwrap it with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of **RxSwiftExt**. Moveover on **line 10** I make sure that there's really an event given to avoid false positives.
+- On **line 19** you can notice that I add an extra `20pt` to the `statusBarFrame`. It makes the tappable target a little bit higher. [M. Fitts](https://lawsofux.com/fittss-law.html) approves it :+1:.
+- On **line 22**, we use the `.debounce()` operator with a delay of `0` and an async instance of the `MainScheduler`. It's important because `UIView.point(inside:with:)` will be called many times during the same run loop, so we need to filter repetitive events. You can see this as similar to an other UIKit pattern like `setNeedsDisplay()` / `displayIfNeeded()`
 
-:muscle: Congratulations, you're done with the first step
+:muscle: Awesome, we're done with the first step.
 
 ### 2. Detect status bar tap on a visible ViewController
 
@@ -166,7 +171,7 @@ enum ScrollTarget {
 }
 ```
 
-:boom: Done
+:white_check_mark: Done
 
 ### 4. Save contentOffset after scroll
 

@@ -71,6 +71,7 @@ instagram = ""
 linkedin = "jeromealves"
 twitter = "jegnux"
 telegram = ""
+heetch = "03875a59-c16f-4425-8161-288499837167"
 
 [blackfriday]
 
@@ -81,7 +82,7 @@ identifier = "blog"
 url = "/"
 
 [params.social.config]
-platforms = ["github","facebook","twitter","instagram","email","codepen","linkedin","telegram"]
+platforms = ["github","facebook","twitter","heetch","instagram","email","codepen","linkedin","telegram"]
 
 [taxonomies]
 author = "authors"
