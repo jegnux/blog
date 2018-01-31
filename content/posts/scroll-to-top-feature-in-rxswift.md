@@ -106,7 +106,6 @@ extension ObservableType {
           }
           .unwrap()
       }
-      .debug()
       .filter { [unowned app = self.base] point in
         point.y < app.statusBarFrame.maxY + 20
       }
@@ -115,10 +114,13 @@ extension ObservableType {
   }
 }
 ```
-- On **line 3** we use the `keyWindow: Observable<UIWindow?>` defined earlier.
-- On **lines 6 to 15** we use the `.methodInvoked()` operator to intercept the invocation and `map` over it to get the point location of the touch event. In practice, it would be safe to returned directly a forced unwrapped `arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep the optional and unwrap it with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of **RxSwiftExt**. Moveover on **line 10** I make sure that there's really an event given to avoid false positives.
-- On **line 19** you can notice that I add an extra `20pt` to the `statusBarFrame`. It makes the tappable target a little bit higher. [M. Fitts](https://lawsofux.com/fittss-law.html) approves it :+1:.
-- On **line 22**, we use the `.debounce()` operator with a delay of `0` and an async instance of the `MainScheduler`. It's important because `UIView.hitTest(_:with:)` will be called many times during the same run loop, so we need to filter repetitive events. You can see this as similar to an other UIKit pattern like `setNeedsDisplay()` / `displayIfNeeded()`
+- On **line 3** we use the `keyWindow: Observable<UIWindow?>` defined earlier
+- On **line 7** we use the `.methodInvoked()` operator to intercept the invocation of `UIView.hitTest(_:with:)`,
+- On **lines 8 to 14** we `map` the previous result to get the point location of the touch event. In practice, it would be safe to return directly a forced unwrapped `arg.first as! CGPoint` because we *know* the exact method signature, but I still prefer to keep an optional
+- On **line 11**, we make sure that there's really an event given in order to avoid false positives
+- On **line 15** we unwrap the point with [`.unwrap()`](https://github.com/RxSwiftCommunity/RxSwiftExt#unwrap) operator of **RxSwiftExt**.
+- On **line 18** you can notice that I add an extra `20pt` to the `statusBarFrame`. It makes the tappable target a little bit higher. [M. Fitts](https://lawsofux.com/fittss-law.html) approves it :+1:.
+- On **line 21**, we use the `.debounce()` operator with a delay of `0` and an async instance of the `MainScheduler`. It's important because `UIView.hitTest(_:with:)` will be called many times during the same run loop, so we need to filter repetitive events. You can see this as similar to an other UIKit pattern like `setNeedsDisplay()` / `displayIfNeeded()`
 
 :muscle: Awesome, we're done with the first step.
 
