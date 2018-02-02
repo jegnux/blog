@@ -90,7 +90,7 @@ func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView?
 And **RxCocoa** has a powerful built-in `.methodInvoked()` operator to do this.
 
 ```swift
-extension ObservableType {
+extension Reactive where Base: UIApplication {
   var statusBarTap: Observable<Void> {
     return keyWindow
       .flatMapLatest { window -> Observable<CGPoint> in
