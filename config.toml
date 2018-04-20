@@ -15,7 +15,7 @@ enableRobotsTXT = true # generate robots.txt
 # Syntax Highlighting ( https://gohugo.io/content-management/syntax-highlighting/ )
 pygmentsUseClassic = false
 pygmentsCodefences = true
-pygmentsOptions = "linenos=table"
+pygmentsOptions = "linenos=inline"
 
 # Missing translations will default to this content language
 defaultContentLanguage = "en"
